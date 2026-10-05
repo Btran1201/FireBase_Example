@@ -1,7 +1,6 @@
 package vn.edu.ueh.thanhdnh.firebase_example;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -25,12 +24,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class ShowDataActivity extends AppCompatActivity {
     FirebaseFirestore db;
     RecyclerView recyclerView;
-    List<User> users = new ArrayList();
+    List<Article> articles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,43 +42,46 @@ public class ShowDataActivity extends AppCompatActivity {
         });
 
         FirebaseApp.initializeApp(this);
-        //users.add(new User("default", "000"));
 
         recyclerView = findViewById(R.id.reclyclerview);
-        UserViewAdapter adapter = new UserViewAdapter(getBaseContext(), users);
+        ArticleViewAdapter adapter = new ArticleViewAdapter(this, articles);
         recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
-        /*db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        /* Day la cach doc dlieu: cach nay doc mot lan tu luc mo man hinh,
+        con bai minh dung addSnapshotListener se doc dlieu lan dau va moi lan dlieu thay doi
+        db.collection("articles").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
           @Override
           public void onComplete(@NonNull Task<QuerySnapshot> task) {
             if(task.isSuccessful()){
-              users.clear();
+              articles.clear();
               for(QueryDocumentSnapshot q : task.getResult()){
                 Map<String, Object> data = q.getData();
-                User user = new User((String)data.get("name"), (String)data.get("phone"));
-                users.add(user);
+                Article article = new Article((String)data.get("title"),
+                        (String)data.get("image"), (String)data.get("description"));
+                articles.add(article);
               }
-              adapter.update(users);
+              adapter.update(articles);
               adapter.notifyDataSetChanged();
             }
           }
         });*/
-      db.collection("users").addSnapshotListener(new EventListener<QuerySnapshot>() {
-        @Override
-        public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-          if (snapshots != null) {
-            users.clear();
-            for (QueryDocumentSnapshot q : snapshots) {
-              Map<String, Object> data = q.getData();
-              User user = new User((String) data.get("name"), (String) data.get("phone"));
-              users.add(user);
+        db.collection("articles").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                if (snapshots != null) {
+                    articles.clear();
+                    for (QueryDocumentSnapshot q : snapshots) {
+                        Map<String, Object> data = q.getData();
+                        Article article = new Article((String) data.get("title"),
+                                (String) data.get("image"), (String) data.get("description"));
+                        articles.add(article);
+                    }
+                    adapter.update(articles);
+                    adapter.notifyDataSetChanged();
+                }
             }
-            adapter.update(users);
-            adapter.notifyDataSetChanged();
-          }
-        }
-      });
+        });
     }
 }

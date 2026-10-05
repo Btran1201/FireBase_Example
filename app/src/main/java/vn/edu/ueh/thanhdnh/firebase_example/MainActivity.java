@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
   FirebaseFirestore db;
   Button btAdd, btShow;
-  EditText etName, etPhone;
+  EditText etTitle, etImage, etDescription;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     db = FirebaseFirestore.getInstance();
     btAdd = findViewById(R.id.btAdd);
     btShow = findViewById(R.id.btShow);
-    etName = findViewById(R.id.etName);
-    etPhone = findViewById(R.id.etPhone);
+    etTitle = findViewById(R.id.etTitle);
+    etImage = findViewById(R.id.etImage);
+    etDescription = findViewById(R.id.etDescription);
     btAdd.setOnClickListener(this);
     btShow.setOnClickListener(this);
   }
@@ -44,9 +46,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   @Override
   public void onClick(View view) {
     if (view.getId() == R.id.btAdd) {
-      db.collection("users").add(new User(etName.getText().toString(), etPhone.getText().toString()));
-      etName.setText("");
-      etPhone.setText("");
+      String title = etTitle.getText().toString().trim();
+      String image = etImage.getText().toString().trim();
+      String description = etDescription.getText().toString().trim();
+
+      if (title.isEmpty() || image.isEmpty()) {
+        Toast.makeText(this, "Nhập tiêu đề và link ảnh", Toast.LENGTH_SHORT).show();
+        return;
+      }
+
+      db.collection("articles").add(new Article(title, image, description));
+      etTitle.setText("");
+      etImage.setText("");
+      etDescription.setText("");
+      Toast.makeText(this, "Đã thêm bài viết", Toast.LENGTH_SHORT).show();
     } else if (view.getId() == R.id.btShow) {
       Intent intent = new Intent(getBaseContext(), ShowDataActivity.class);
       startActivity(intent);
