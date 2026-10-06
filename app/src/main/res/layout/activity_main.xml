@@ -4,8 +4,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E2E3E7"
     android:orientation="vertical"
     android:padding="16dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="16dp"
     tools:context=".MainActivity">
 
   <EditText
@@ -26,10 +29,10 @@
       android:id="@+id/etDescription"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:gravity="top"
       android:hint="Mô tả"
       android:inputType="textMultiLine"
-      android:minLines="3"
-      android:gravity="top" />
+      android:minLines="3" />
 
   <LinearLayout
       android:layout_width="match_parent"

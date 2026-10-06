@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleViewAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
     private LayoutInflater mInflater;
     private List<Article> articles;
+    private List<String> ids = new ArrayList<>(); // ID document tương ứng với từng bài
 
     public ArticleViewAdapter(Context context, List<Article> articles) {
         this.mInflater = LayoutInflater.from(context);
@@ -25,8 +27,18 @@ public class ArticleViewAdapter extends RecyclerView.Adapter<ArticleViewHolder> 
         this.articles = articles;
     }
 
+    // Cập nhật cả danh sách bài viết lẫn ID document
+    public void update(List<Article> articles, List<String> ids) {
+        this.articles = articles;
+        this.ids = ids;
+    }
+
     public Article getArticle(int position) {
         return articles.get(position);
+    }
+
+    public String getArticleId(int position) {
+        return ids.get(position);
     }
 
     @NonNull

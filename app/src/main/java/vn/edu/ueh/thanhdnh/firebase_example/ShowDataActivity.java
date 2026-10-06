@@ -29,6 +29,7 @@ public class ShowDataActivity extends AppCompatActivity {
     FirebaseFirestore db;
     RecyclerView recyclerView;
     List<Article> articles = new ArrayList<>();
+    List<String> ids = new ArrayList<>(); // ID document, cùng thứ tự với articles
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +50,20 @@ public class ShowDataActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
-        /* Day la cach doc dlieu: cach nay doc mot lan tu luc mo man hinh,
-        con bai minh dung addSnapshotListener se doc dlieu lan dau va moi lan dlieu thay doi
-        db.collection("articles").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        /*db.collection("articles").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
           @Override
           public void onComplete(@NonNull Task<QuerySnapshot> task) {
             if(task.isSuccessful()){
               articles.clear();
+              ids.clear();
               for(QueryDocumentSnapshot q : task.getResult()){
                 Map<String, Object> data = q.getData();
                 Article article = new Article((String)data.get("title"),
                         (String)data.get("image"), (String)data.get("description"));
                 articles.add(article);
+                ids.add(q.getId());
               }
-              adapter.update(articles);
+              adapter.update(articles, ids);
               adapter.notifyDataSetChanged();
             }
           }
@@ -72,13 +73,15 @@ public class ShowDataActivity extends AppCompatActivity {
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
                 if (snapshots != null) {
                     articles.clear();
+                    ids.clear();
                     for (QueryDocumentSnapshot q : snapshots) {
                         Map<String, Object> data = q.getData();
                         Article article = new Article((String) data.get("title"),
                                 (String) data.get("image"), (String) data.get("description"));
                         articles.add(article);
+                        ids.add(q.getId());
                     }
-                    adapter.update(articles);
+                    adapter.update(articles, ids);
                     adapter.notifyDataSetChanged();
                 }
             }

@@ -25,12 +25,11 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View view) {
         int position = getLayoutPosition();
-        Article article = adapter.getArticle(position);
+        if (position == RecyclerView.NO_POSITION) return;
 
+        // Chỉ gửi ID document; trang Detail tự đọc dữ liệu mới nhất từ Firestore
         Intent intent = new Intent(view.getContext(), ArticleDetailActivity.class);
-        intent.putExtra("title", article.getTitle());
-        intent.putExtra("image", article.getImage());
-        intent.putExtra("description", article.getDescription());
+        intent.putExtra("id", adapter.getArticleId(position));
         view.getContext().startActivity(intent);
     }
 
